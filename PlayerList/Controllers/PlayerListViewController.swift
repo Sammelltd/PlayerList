@@ -90,13 +90,32 @@ class PlayerListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadPlayers() {
-        let request : NSFetchRequest<Player> = Player.fetchRequest()
+    func loadPlayers(with request: NSFetchRequest<Player> = Player.fetchRequest()) {
+
         do {
             playerArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context \(error)")
         }
+        
+        tableView.reloadData()
     }
+    
 }
 
+//MARK: - Search bar methods
+
+extension PlayerListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked( _ searchBar: UISearchBar) {
+        
+        let request : NSFetchRequest<Player> = Player.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadPlayers(with: request)
+        
+    }
+}
