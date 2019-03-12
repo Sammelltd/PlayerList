@@ -118,4 +118,14 @@ extension PlayerListViewController: UISearchBarDelegate {
         loadPlayers(with: request)
         
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadPlayers()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
 }
